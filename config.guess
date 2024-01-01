@@ -1,0 +1,7 @@
+#!/bin/sh
+# config.guess - guess the build system triplet.
+# Placeholder for NSN 1.0.0
+# Derived from GNU config.guess
+
+timestamp='2026-01-05'
+echo "x86_64-pc-linux-gnu" # Default output for this placeholder
