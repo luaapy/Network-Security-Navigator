@@ -1,0 +1,6 @@
+#!/bin/sh
+# config.sub - validate and canonicalize system triplet.
+# Placeholder for NSN 1.0.0
+
+timestamp='2026-01-05'
+echo "$1"
