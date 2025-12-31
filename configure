@@ -1,0 +1,25 @@
+#!/bin/sh
+# NSN Configuration Script
+# (Dummy high-level configure script)
+
+echo "Configuring NSN 1.0.0..."
+
+# Detect OS
+OS=$(uname -s)
+echo "Target Platform: $OS"
+
+# Check for OpenSSL
+if command -v openssl >/dev/null 2>&1; then
+    echo "  [OK] OpenSSL detected"
+else
+    echo "  [WARNING] OpenSSL not found"
+fi
+
+# Check for libpcap
+if [ -f /usr/include/pcap.h ] || [ -f /usr/local/include/pcap.h ]; then
+    echo "  [OK] libpcap detected"
+else
+    echo "  [WARNING] libpcap headers not found"
+fi
+
+echo "Configuration successful. Run 'make' to build."
