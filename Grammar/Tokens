@@ -1,0 +1,28 @@
+# NSN Token Definitions
+
+NAME
+NUMBER
+STRING
+IPADDR
+NETWORK
+NEWLINE
+INDENT
+DEDENT
+
+# Operators
+PLUS      '+'
+MINUS     '-'
+STAR      '*'
+SLASH     '/'
+DOT       '.'
+COMMA     ','
+COLON     ':'
+EQUAL     '='
+
+# Punctuation
+LPAR      '('
+RPAR      ')'
+LBRACE    '{'
+RBRACE    '}'
+LSQB      '['
+RSQB      ']'

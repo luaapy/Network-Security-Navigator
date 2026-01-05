@@ -1,0 +1,42 @@
+# NSN (Network Security Navigator)
+# Network Monitoring Utilities
+
+import protocol.raw as raw
+
+def monitor_traffic(interface, duration=60):
+    """
+    Monitor traffic on an interface for a given duration.
+    """
+    import datetime
+    start = datetime.now()
+    packets = []
+    
+    # This is a simplified block, usually we'd use a callback
+    while (datetime.now() - start) < duration:
+        pkts = raw.sniff(interface, count=10)
+        packets.extend(pkts)
+        
+    return packets
+
+def summarize_traffic(packets):
+    """
+    Provide a summary of captured traffic.
+    """
+    summary = {
+        "total_count": len(packets),
+        "protocols": {},
+        "sources": {},
+        "destinations": {}
+    }
+    
+    for p in packets:
+        proto = p.get_field("IP", "proto")
+        summary["protocols"][proto] = summary["protocols"].get(proto, 0) + 1
+        
+        src = p.get_field("IP", "src")
+        summary["sources"][src] = summary["sources"].get(src, 0) + 1
+        
+        dst = p.get_field("IP", "dst")
+        summary["destinations"][dst] = summary["destinations"].get(dst, 0) + 1
+        
+    return summary

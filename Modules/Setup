@@ -1,0 +1,18 @@
+# NSN Static Module Configuration
+# File: Setup
+#
+# List modules to be built into the NSN core.
+# Format: <module_name> <source_file> [compiler_flags] [linker_flags]
+
+# Core Modules
+_nsn _nsnmodule.c
+config config.c
+getpath getpath.c
+main main.c
+
+# Built-in Standard Library
+_network _network/socketmodule.c _network/tcpmodule.c _network/udpmodule.c
+_crypto _crypto/aesmodule.c _crypto/hashmodule.c
+_io _io/fileio.c _io/bufferedio.c _io/textio.c
+_datetime _datetime/_datetimemodule.c
+_json _json/_json.c

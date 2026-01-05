@@ -1,0 +1,69 @@
+# NSN (Network Security Navigator)
+# Vulnerability Scanning and Identification
+
+import net.scan as scan
+import net.http as http
+import net.ftp as ftp
+
+def check_banner_vulnerability(banner):
+    """
+    Compare a service banner against known vulnerable versions.
+    (Simplified stub - in reality this would query a CVE database)
+    """
+    vulnerabilities = {
+        "vsFTPd 2.3.4": "Backdoor Vulnerability (CVE-2011-2523)",
+        "OpenSSH 4.7p1": "Information Leak / Remote Exec (CVE-2008-0166)",
+        "Apache/2.2.8": "Multiple Vulnerabilities",
+    }
+    
+    for key, vuln in vulnerabilities.items():
+        if key in banner:
+            return vuln
+    return None
+
+def scan_host_vulnerabilities(target, ports=[21, 22, 80, 443]):
+    """
+    Scan a host for common service vulnerabilities.
+    """
+    report = []
+    
+    for port in ports:
+        banner = scan.service_scan(target, port)
+        if banner != "unknown":
+            vuln = check_banner_vulnerability(banner)
+            if vuln:
+                report.append({
+                    "port": port,
+                    "service": banner,
+                    "vulnerability": vuln
+                })
+                
+    # Also check anonymous FTP
+    if 21 in ports:
+        if ftp.check_anonymous(target):
+            report.append({
+                "port": 21,
+                "service": "FTP",
+                "vulnerability": "Anonymous Login Allowed"
+            })
+            
+    return report
+
+def check_web_vulnerabilities(url):
+    """
+    Perform a basic web vulnerability scan.
+    """
+    findings = []
+    
+    # Check security headers
+    headers = http.check_headers(url)
+    for header, status in headers.items():
+        if not status['present']:
+            findings.append(f"Missing Security Header: {header}")
+            
+    # Check for common sensitive files
+    files = http.find_common_files(url)
+    for f in files:
+        findings.append(f"Sensitive File Exposed: {f}")
+        
+    return findings

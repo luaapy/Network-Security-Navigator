@@ -1,0 +1,14 @@
+# NSN Hello World & Port Scan Example
+
+# IP address of the target
+ip = "127.0.0.1"
+
+print "--- NSN Security Navigator ---"
+print "Target Host: " + ip
+
+# Perform a simple port scan
+# (In a real implementation, 'scan' would be a built-in keyword or function)
+print "Scanning common ports..."
+scan ip:80, 443, 8080
+
+print "Scan complete."

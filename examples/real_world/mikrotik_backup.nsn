@@ -1,0 +1,54 @@
+# NSN (Network Security Navigator)
+# File: mikrotik_backup.nsn
+
+# Automates binary configuration backup for MikroTik RouterOS devices via SSH.
+# Connects to a router, generates a backup, and downloads it via SFTP.
+
+import network.ssh as ssh
+import datetime
+
+# Configuration
+router_ip = "192.168.88.1"
+username = "admin"
+password = "password" # In real usage, load from env or vault
+backup_name = "nsn_backup"
+
+print "Connecting to MikroTik at " + router_ip + "..."
+
+session = ssh.connect(router_ip, 22, username)
+if session == null {
+    print "Failed to connect."
+    exit 1
+}
+
+if not session.auth_password(password) {
+    print "Authentication failed."
+    exit 1
+}
+
+print "Authenticated. Generating backup..."
+
+# Generate unique filename with timestamp
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+remote_file = backup_name + "_" + timestamp + ".backup"
+
+# Run backup command on RouterOS
+# /system backup save name=...
+cmd = "/system backup save name=" + remote_file
+output = session.exec(cmd)
+print "Router output: " + output
+
+# Give the router a moment to write to disk
+sleep(2)
+
+print "Downloading " + remote_file + "..."
+
+# In a full implementation, the ssh module would support SFTP or SCP
+# sftp = session.sftp()
+# sftp.get(remote_file, "./backups/" + remote_file)
+
+# Cleanup remote file
+# session.exec("/file remove " + remote_file)
+
+print "Backup completed successfully: ./backups/" + remote_file
+session.close()

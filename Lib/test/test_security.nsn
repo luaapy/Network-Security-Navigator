@@ -1,0 +1,49 @@
+# NSN (Network Security Navigator)
+# Security Integration Tests
+
+import security
+import nsn.types as types
+
+def test_hashing():
+    print("Testing Hashing...")
+    data = "nsn_test_data"
+    assert security.md5(data) != ""
+    assert security.sha256(data) != ""
+    print("Hashing tests passed.")
+
+def test_aes():
+    print("Testing AES...")
+    key = security.generate_key(32)
+    cipher = security.AES(key)
+    data = "Secret Message"
+    enc = cipher.encrypt(data)
+    dec = cipher.decrypt(enc)
+    assert dec.decode() == data
+    print("AES encryption/decryption passed.")
+
+def test_audit_logic():
+    print("Testing Audit Logic (Dry Run)...")
+    # This just tests if the classes can be instantiated and basic methods called
+    audit = security.Audit("127.0.0.1/32")
+    # We won't actually run it to avoid network dependency in unit tests
+    summary = audit.generate_summary()
+    assert summary["total_hosts"] == 0
+    print("Audit logic test passed.")
+
+def test_reporting():
+    print("Testing Reporting...")
+    results = {
+        "127.0.0.1": {
+            "services": {80: "open"},
+            "vulnerabilities": [{"vulnerability": "Test Vuln", "port": 80, "service": "HTTP"}]
+        }
+    }
+    report_md = security.to_markdown(results)
+    assert "Test Vuln" in report_md
+    print("Reporting test passed.")
+
+# Run all security tests
+test_hashing()
+test_aes()
+test_audit_logic()
+test_reporting()

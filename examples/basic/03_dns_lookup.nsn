@@ -1,0 +1,11 @@
+# NSN Example: DNS Lookup
+
+domain = "google.com"
+print "Resolving domain: " + domain
+
+ip = resolve domain
+if ip {
+    print domain + " resolved to " + ip
+} else {
+    print "Could not resolve " + domain
+}

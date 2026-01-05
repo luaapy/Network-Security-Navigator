@@ -1,0 +1,21 @@
+# NSN Real-world Example: Firewall Audit
+
+target = "10.0.0.1"
+print "--- Firewall Security Audit: " + target + " ---"
+
+# Scan the firewall for unexpectedly open ports
+dangerous_ports = [21, 23, 161, 3389, 5900]
+results = scan target:dangerous_ports
+
+found_open = []
+for r in results {
+    if r.state == "open" {
+        found_open.append(r.port)
+    }
+}
+
+if len(found_open) > 0 {
+    print "[CRITICAL] Dangerous ports found open: " + found_open
+} else {
+    print "[OK] No common dangerous ports are open."
+}

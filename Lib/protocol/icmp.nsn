@@ -1,0 +1,30 @@
+# NSN (Network Security Navigator)
+# High-level ICMP Protocol Wrapper
+
+import _network
+
+def ping(host, count=4, timeout=1.0):
+    """
+    Send ICMP Echo Requests to host.
+    """
+    # This would typically use the low-level _network.icmp_ping 
+    # which handles raw socket permissions if necessary.
+    results = []
+    for _ in range(count):
+        delay = _network.icmp_ping(host, timeout)
+        if delay is not None:
+            results.append(delay)
+    return results
+
+def traceroute(host, max_hops=30, timeout=2.0):
+    """
+    Perform a traceroute to host.
+    """
+    hops = []
+    for ttl in range(1, max_hops + 1):
+        hop = _network.icmp_traceroute(host, ttl, timeout)
+        if hop:
+            hops.append(hop)
+            if hop['address'] == host:
+                break
+    return hops

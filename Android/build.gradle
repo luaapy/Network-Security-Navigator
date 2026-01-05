@@ -1,0 +1,61 @@
+// Android Gradle build script for NSN (Network Security Navigator)
+// This script builds the native NSN interpreter as a shared library using ndk-build.
+
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    compileSdkVersion 33
+    buildToolsVersion "33.0.2"
+
+    defaultConfig {
+        applicationId "org.nsn.lang"
+        minSdkVersion 21
+        targetSdkVersion 33
+        versionCode 1
+        versionName "1.0"
+
+        // Specify the native build script (ndk-build)
+        externalNativeBuild {
+            ndkBuild {
+                // Path relative to this build.gradle file
+                path "jni/Android.mk"
+            }
+        }
+        // Define which ABIs to build
+        ndk {
+            abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+        }
+    }
+
+    // Configure the external native build (ndk-build) for all build types
+    externalNativeBuild {
+        ndkBuild {
+            path "jni/Android.mk"
+        }
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    // Source sets configuration (optional, adjust if you have Java/Kotlin code)
+    sourceSets {
+        main {
+            java.srcDirs = ['src/main/java']
+            jniLibs.srcDirs = ['src/main/jniLibs']
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    // Add any additional Android libraries here
+}

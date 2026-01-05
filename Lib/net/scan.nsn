@@ -1,0 +1,55 @@
+# NSN (Network Security Navigator)
+# Network Scanning Utilities
+
+import protocol.tcp as tcp
+import protocol.udp as udp
+import _network
+
+def port_scan(target, ports, method="connect", timeout=1.0):
+    """
+    Perform a port scan on a target.
+    Methods: "connect" (TCP), "syn" (TCP RAW), "udp"
+    """
+    results = {}
+    
+    if method == "connect":
+        for port in ports:
+            try:
+                conn = tcp.Connection(target, port, timeout=timeout)
+                conn.connect()
+                results[port] = "open"
+                conn.close()
+            except:
+                results[port] = "closed"
+    
+    elif method == "syn":
+        # Requires raw socket permissions via _network
+        for port in ports:
+            if _network.syn_scan(target, port, timeout):
+                results[port] = "open"
+            else:
+                results[port] = "closed"
+                
+    elif method == "udp":
+        for port in ports:
+            if udp.ping(target, port):
+                results[port] = "open|filtered"
+            else:
+                results[port] = "closed"
+                
+    return results
+
+def service_scan(target, port):
+    """
+    Attempt to identify the service running on a port.
+    """
+    # Simple banner grabbing
+    try:
+        conn = tcp.Connection(target, port, timeout=2.0)
+        conn.connect()
+        conn.send(b"\r\n")
+        banner = conn.recv(1024)
+        conn.close()
+        return banner.decode().strip()
+    except:
+        return "unknown"

@@ -1,0 +1,7 @@
+# NSN Example: Traceroute
+
+target = "8.8.8.8"
+print "Tracing path to " + target
+
+trace target
+# Traceroute output is typically printed line by line by the built-in command

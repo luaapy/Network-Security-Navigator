@@ -1,0 +1,9 @@
+parameters:
+- name: operatingSystem
+  type: string
+  default: 'ubuntu-latest'
+
+steps:
+- script: |
+    ./scripts/test.sh
+  displayName: 'Run NSN Tests'

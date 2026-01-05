@@ -1,0 +1,47 @@
+# NSN (Network Security Navigator)
+# Logging Utilities
+
+import datetime
+
+# Log Levels
+DEBUG = 0
+INFO = 1
+WARNING = 2
+ERROR = 3
+CRITICAL = 4
+
+_level_names = {
+    DEBUG: "DEBUG",
+    INFO: "INFO",
+    WARNING: "WARNING",
+    ERROR: "ERROR",
+    CRITICAL: "CRITICAL"
+}
+
+_current_level = INFO
+
+def set_level(level):
+    global _current_level
+    _current_level = level
+
+def _log(level, msg):
+    if level >= _current_level:
+        now = datetime.format(datetime.now(), "%Y-%m-%d %H:%M:%S")
+        level_name = _level_names.get(level, "UNKNOWN")
+        print(f"[{now}] {level_name}: {msg}")
+
+def debug(msg): _log(DEBUG, msg)
+def info(msg): _log(INFO, msg)
+def warning(msg): _log(WARNING, msg)
+def error(msg): _log(ERROR, msg)
+def critical(msg): _log(CRITICAL, msg)
+
+class Logger:
+    def __init__(self, name):
+        self.name = name
+    
+    def info(self, msg):
+        info(f"({self.name}) {msg}")
+    
+    def error(self, msg):
+        error(f"({self.name}) {msg}")

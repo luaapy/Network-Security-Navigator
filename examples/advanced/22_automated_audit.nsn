@@ -1,0 +1,39 @@
+# service detection, version fingerprinting, and known CVE lookup.
+
+import security.scanner as scanner
+import security.audit as audit
+import network.http as http
+
+host = "192.168.1.100"
+ports = "1-1024"
+
+print "Running automated audit on " + host
+
+# Step 1: Port scan
+open_ports = scanner.scan(host, ports)
+print "Open ports: " + str(open_ports)
+
+# Step 2: Service detection (simple banner grabbing)
+services = {}
+for port in open_ports {
+    if port == 80 or port == 8080 {
+        resp = http.get("http://" + host + ":" + str(port) + "/")
+        services[port] = "HTTP (" + str(resp.status_code) + ")"
+    } elif port == 22 {
+        services[port] = "SSH"
+    } elif port == 443 {
+        services[port] = "HTTPS"
+    } else {
+        services[port] = "Unknown"
+    }
+}
+print "Detected services: " + str(services)
+
+# Step 3: CVE lookup using audit module
+findings = audit.host(host)
+print "Vulnerability findings:"
+for issue in findings {
+    print " - " + issue.id + ": " + issue.severity + " - " + issue.description
+}
+
+print "Automated audit complete."

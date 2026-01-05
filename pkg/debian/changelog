@@ -1,0 +1,7 @@
+nsn (1.0.0-1) unstable; urgency=low
+
+  * Initial release of Network Security Navigator.
+  * Specialized networking and security auditing language core.
+  * Cross-platform support (Linux/Debian).
+
+ -- Nosan  Mon, 05 Jan 2026 12:00:00 +0000

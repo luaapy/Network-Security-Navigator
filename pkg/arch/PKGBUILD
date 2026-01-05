@@ -1,0 +1,22 @@
+# Maintainer: NSN Team <contact@nsn-lang.org>
+pkgname=nsn
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="Network Security Navigator - A lightweight networking language"
+arch=('x86_64' 'aarch64')
+url="https://github.com/luaapy/Network-Security-Navigator"
+license=('MIT')
+depends=('libpcap' 'openssl' 'libssh')
+source=("https://github.com/luaapy/Network-Security-Navigator/archive/v$pkgver.tar.gz")
+sha256sums=('SKIP')
+
+build() {
+    cd "$pkgname-$pkgver"
+    ./configure --prefix=/usr
+    make
+}
+
+package() {
+    cd "$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+}

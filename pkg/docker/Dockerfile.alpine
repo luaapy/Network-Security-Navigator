@@ -1,0 +1,45 @@
+# NSN Lightweight Dockerfile
+# Based on Alpine Linux for minimum footprint
+
+FROM alpine:3.18 AS builder
+
+# Install build dependencies
+RUN apk add --no-cache \
+    build-base \
+    autoconf \
+    automake \
+    libtool \
+    libpcap-dev \
+    openssl-dev \
+    libssh-dev \
+    linux-headers
+
+# Set working directory
+WORKDIR /app
+
+# Copy source code
+COPY . .
+
+# Build NSN
+# Note: Using -Os and stripping for smallest binary
+RUN ./scripts/build.sh CFLAGS="-Os" && \
+    strip nsn
+
+# Production stage
+FROM alpine:3.18
+
+# Install runtime dependencies
+RUN apk add --no-cache \
+    libpcap \
+    openssl \
+    libssh
+
+# Copy from builder
+COPY --from=builder /app/nsn /usr/local/bin/nsn
+COPY --from=builder /app/Lib /usr/local/lib/nsn
+
+# Set environment
+ENV NSN_PATH=/usr/local/lib/nsn
+
+# Default command
+ENTRYPOINT ["nsn"]

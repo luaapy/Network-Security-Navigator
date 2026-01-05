@@ -1,0 +1,16 @@
+{
+    "name": "NSN Development",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".."
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.cpptools",
+                "ms-python.python"
+            ]
+        }
+    },
+    "postCreateCommand": "./.devcontainer/setup.sh"
+}

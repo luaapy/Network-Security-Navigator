@@ -1,0 +1,23 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+- stage: Build
+  jobs:
+  - job: BuildLinux
+    steps:
+    - template: templates/build-template.yml
+      parameters:
+        operatingSystem: 'ubuntu-latest'
+
+- stage: Test
+  dependsOn: Build
+  jobs:
+  - job: TestLinux
+    steps:
+    - template: templates/test-template.yml
+      parameters:
+        operatingSystem: 'ubuntu-latest'

@@ -1,0 +1,35 @@
+name: nsn
+base: core22
+version: '1.0.0'
+summary: Network Security Navigator - A lightweight networking language
+description: |
+  NSN is a specialized language for network analysis, security auditing, 
+  and network automation. It features first-class IP address types and 
+  built-in network scanning primitives.
+
+grade: stable
+confinement: strict
+
+parts:
+  nsn:
+    plugin: autotools
+    source: .
+    autogen-command: ./scripts/build.sh
+    build-packages:
+      - build-essential
+      - libpcap-dev
+      - libssl-dev
+      - libssh-dev
+    stage-packages:
+      - libpcap0.8
+      - libssl3
+      - libssh-4
+
+apps:
+  nsn:
+    command: bin/nsn
+    plugs:
+      - network
+      - network-bind
+      - network-observe
+      - raw-usb

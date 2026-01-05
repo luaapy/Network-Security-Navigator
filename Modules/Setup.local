@@ -1,0 +1,8 @@
+# NSN Local Module Configuration
+# File: Setup.local
+#
+# Use this file to add local modules or override settings in Setup.
+# This file is ignored by git.
+
+# Example:
+# my_module my_module.c -I/custom/include -L/custom/lib -lcustom

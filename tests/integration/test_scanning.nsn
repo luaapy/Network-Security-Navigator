@@ -1,0 +1,38 @@
+# NSN (Network Security Navigator)
+# File: test_scanning.nsn
+# Description: Integration tests for advanced scanning capabilities.
+
+import _network
+import _nsn
+
+func test_service_detection() {
+    print("[Scanning] Testing Service Detection...")
+    target = "127.0.0.1"
+    
+    # Simulate a banner grab on a known local port (e.g. 80 if running)
+    # Using generic scan for the test logic
+    results = _network.scan(target, [80, 443, 22])
+    
+    print("  - Discovered Services: " + results)
+    for (port in results) {
+        print("    - Port " + port.number + ": " + port.state)
+    }
+}
+
+func test_ip_range_expansion() {
+    print("[Scanning] Testing Network Range Expansion...")
+    net = Network("192.168.1.0/24")
+    hosts = net.hosts()
+    
+    if (len(hosts) == 254) {
+        print("  - /24 Network expansion successful (" + len(hosts) + " hosts)")
+    } else {
+        print("  - Network expansion failed")
+        exit(1)
+    }
+}
+
+test_service_detection()
+test_ip_range_expansion()
+
+print("[Scanning] All scanning integration tests PASSED.")

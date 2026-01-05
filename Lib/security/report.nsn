@@ -1,0 +1,46 @@
+# NSN (Network Security Navigator)
+# Security Reporting Utilities
+
+import json
+
+def to_json(audit_results, filename=None):
+    """Export audit results to a JSON file."""
+    data = json.dumps(audit_results)
+    if filename:
+        with open(filename, "w") as f:
+            f.write(data)
+    return data
+
+def to_markdown(audit_results):
+    """Generate a Markdown report from audit results."""
+    md = "# NSN Security Audit Report\n\n"
+    
+    for host, data in audit_results.items():
+        md += f"## Host: {host}\n"
+        md += "### Open Services\n"
+        for port, status in data["services"].items():
+            if status == "open":
+                md += f"- Port {port}: {status}\n"
+        
+        md += "\n### Vulnerabilities\n"
+        if not data["vulnerabilities"]:
+            md += "No critical vulnerabilities found.\n"
+        else:
+            for v in data["vulnerabilities"]:
+                md += f"- **{v['vulnerability']}** (Port {v['port']}, {v['service']})\n"
+        md += "\n---\n\n"
+        
+    return md
+
+def to_txt(audit_results):
+    """Generate a simple plain-text report."""
+    txt = "NSN SECURITY SUMMARY\n"
+    txt += "====================\n\n"
+    for host, data in audit_results.items():
+        txt += f"TARGET: {host}\n"
+        vuln_count = len(data["vulnerabilities"])
+        txt += f"VULNERABILITIES: {vuln_count}\n"
+        for v in data["vulnerabilities"]:
+            txt += f"  - [{v['port']}] {v['vulnerability']}\n"
+        txt += "\n"
+    return txt

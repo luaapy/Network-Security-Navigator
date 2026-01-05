@@ -1,0 +1,11 @@
+# NSN Funding Information
+# Following the .well-known standardization for project funding
+
+version: 1
+funding:
+  - type: github
+    id: nsn-lang
+  - type: custom
+    url: https://nsn-lang.org/donate
+  - type: patreon
+    id: nsnlang

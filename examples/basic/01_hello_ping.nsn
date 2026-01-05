@@ -1,0 +1,12 @@
+# NSN Example: Hello Ping
+# Pings a target and prints the result
+
+target = "8.8.8.8"
+print "--- NSN Network Test ---"
+print "Pinging " + target + "..."
+
+if ping(target) {
+    print "Successfully reached " + target
+} else {
+    print "Failed to ping " + target
+}

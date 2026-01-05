@@ -1,0 +1,48 @@
+# Valgrind suppression file for NSN
+#
+# This file suppresses known false positives and expected leaks in the 
+# NSN interpreter, such as the initial arena allocations and shared libraries.
+
+{
+   NSN_Arena_Leaked_On_Finalize
+   Memcheck:Leak
+   match-leak-kinds: reachable,possible
+   fun:malloc
+   fun:NsnMem_Malloc
+   fun:NsnArena_New
+}
+
+{
+   NSN_Type_Objects_Static
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:NsnMem_Malloc
+   fun:NsnType_CreateBuiltin
+}
+
+{
+   NSN_Global_State_Initialize
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:Nsn_State_Initialize
+}
+
+# Standard library suppressions (example for OpenSSL)
+{
+   OpenSSL_Init
+   Memcheck:Leak
+   match-leak-kinds: reachable,possible
+   obj:*/libcrypto.so*
+   fun:OPENSSL_init_crypto
+}
+
+# DNS lookup suppressions (often leaks in glibc)
+{
+   Glibc_GetAddrInfo
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:getaddrinfo
+}

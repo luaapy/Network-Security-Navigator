@@ -1,0 +1,14 @@
+Source: nsn
+Section: utils
+Priority: optional
+Maintainer: Nosan
+Build-Depends: debhelper-compat (= 13), build-essential, libpcap-dev, libssl-dev, libssh-dev
+Standards-Version: 4.5.0
+Homepage: https://github.com/luaapy/Network-Security-Navigator
+
+Package: nsn
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libpcap0.8, libssl3, libssh-4
+Description: Network Security Navigator programming language
+ NSN is a specialized lightweight language for network analysis, 
+ security auditing, and network automation.

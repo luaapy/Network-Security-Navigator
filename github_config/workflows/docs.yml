@@ -1,0 +1,32 @@
+name: Documentation
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        pip install -r Doc/requirements.txt
+
+    - name: Build Documentation
+      run: |
+        cd Doc
+        make html
+
+    - name: Upload Documentation
+      uses: actions/upload-artifact@v3
+      with:
+        name: html-docs
+        path: Doc/_build/html

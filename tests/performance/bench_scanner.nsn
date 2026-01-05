@@ -1,0 +1,51 @@
+# NSN (Network Security Navigator)
+# File: bench_scanner.nsn
+# Description: Performance benchmark for high-speed port scanning.
+
+import _nsn
+import _network
+
+func benchmark_scan_overhead() {
+    print("[Benchmark] Port Scan Object Overhead (1,000 scans)...")
+    target = IPAddress("127.0.0.1")
+    ports = [80]
+    
+    start = _nsn.get_time_ns()
+    
+    for (i = 0; i < 1000; i++) {
+        # Perform a minimal scan to measure interpreter overhead per call
+        results = _network.scan(target, ports)
+    }
+    
+    end = _nsn.get_time_ns()
+    duration = (end - start) / 1000000.0 # ms
+    print("  - Total Time: " + duration + " ms")
+    print("  - Avg Overhead per Scan: " + (duration / 1000.0) + " ms")
+}
+
+func benchmark_port_matching() {
+    print("[Benchmark] List Filtering / Port Matching (50,000 items)...")
+    
+    ports = []
+    for (i = 1; i <= 50000; i++) {
+        ports.append(Port(i, "tcp"))
+    }
+    
+    start = _nsn.get_time_ns()
+    
+    # Simulate finding specific ports
+    found = 0
+    for (p in ports) {
+        if (p.number == 8080) {
+            found = found + 1
+        }
+    }
+    
+    end = _nsn.get_time_ns()
+    duration = (end - start) / 1000000.0 # ms
+    print("  - Total Time: " + duration + " ms")
+    print("  - Operations: 50,000 matches")
+}
+
+benchmark_scan_overhead()
+benchmark_port_matching()

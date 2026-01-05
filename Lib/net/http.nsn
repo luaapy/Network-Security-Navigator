@@ -1,0 +1,49 @@
+# NSN (Network Security Navigator)
+# Advanced HTTP Utilities
+
+import protocol.http as http
+
+def check_headers(url):
+    """
+    Analyze security headers of a URL.
+    """
+    resp = http.get(url)
+    headers = resp.headers
+    
+    security_headers = [
+        "Content-Security-Policy",
+        "Strict-Transport-Security",
+        "X-Frame-Options",
+        "X-Content-Type-Options",
+        "Referrer-Policy"
+    ]
+    
+    analysis = {}
+    for header in security_headers:
+        analysis[header] = {
+            "present": header in headers,
+            "value": headers.get(header)
+        }
+    return analysis
+
+def find_common_files(url):
+    """
+    Check for common files like robots.txt, .git, etc.
+    """
+    paths = [
+        "/robots.txt",
+        "/.git/config",
+        "/.env",
+        "/admin",
+        "/backup"
+    ]
+    
+    found = []
+    for path in paths:
+        try:
+            resp = http.get(url + path)
+            if resp.status == 200:
+                found.append(path)
+        except:
+            pass
+    return found

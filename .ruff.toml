@@ -1,0 +1,13 @@
+# Ruff configuration for NSN Python Tools
+line-length = 88
+target-version = "py311"
+
+[lint]
+select = ["E", "F", "I", "W", "UP", "B", "C4"]
+ignore = []
+
+[format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"

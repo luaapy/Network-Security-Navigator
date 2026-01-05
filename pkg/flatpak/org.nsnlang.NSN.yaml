@@ -1,0 +1,19 @@
+id: org.nsnlang.NSN
+runtime: org.freedesktop.Sdk
+runtime-version: '22.08'
+sdk: org.freedesktop.Sdk
+command: nsn
+finish-args:
+  - --share=network
+  - --share=ipc
+  - --device=all
+  - --filesystem=home
+
+modules:
+  - name: nsn
+    buildsystem: autotools
+    sources:
+      - type: dir
+        path: ../../
+    config-opts:
+      - --prefix=/app

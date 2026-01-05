@@ -1,0 +1,37 @@
+# NSN (Network Security Navigator)
+# Core Type Definitions and Helpers
+
+# Note: many of these are implemented in C, this file provides
+# high-level wrappers or additional type-related utilities.
+
+def is_iterable(obj):
+    try:
+        iter(obj)
+        return True
+    except TypeError:
+        return False
+
+def is_callable(obj):
+    # This would typically use a built-in __callable__ or similar
+    return hasattr(obj, "__call__")
+
+class IPAddress:
+    def __init__(self, addr):
+        # Wraps the core IPAddr type
+        import _network
+        self._internal = _network.ip_addr(addr)
+    
+    def __str__(self):
+        return str(self._internal)
+    
+    @property
+    def version(self):
+        return self._internal.version
+
+class Network:
+    def __init__(self, cidr):
+        import _network
+        self._internal = _network.network(cidr)
+
+    def __contains__(self, ip):
+        return self._internal.contains(ip)

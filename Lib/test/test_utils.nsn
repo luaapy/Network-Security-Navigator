@@ -1,0 +1,22 @@
+# NSN (Network Security Navigator)
+# File: test_utils.nsn
+
+# Simple utility functions for test scripts
+
+def assert_equal(actual, expected, msg=""):
+    if actual != expected:
+        raise AssertionError("Assertion failed: " + msg + 
+                             " (expected " + expected.toString() + 
+                             ", got " + actual.toString() + ")")
+    else:
+        print("Test passed: " + msg)
+
+def run_test(test_func):
+    try:
+        test_func()
+        print("Test passed")
+    except Exception as e:
+        print("Test failed:", e)
+
+# Exported symbols for `from test_utils import *`
+__all__ = ["assert_equal", "run_test"]

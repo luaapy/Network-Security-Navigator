@@ -1,0 +1,32 @@
+# NSN (Network Security Navigator)
+# Configuration File Handling
+
+import json
+
+def load_json(path):
+    """Load configuration from a JSON file."""
+    with open(path, "r") as f:
+        content = f.read()
+    return json.loads(content)
+
+def save_json(path, data):
+    """Save data to a JSON file."""
+    content = json.dumps(data)
+    with open(path, "w") as f:
+        f.write(content)
+
+def load_env(path=".env"):
+    """Load simple KEY=VALUE environment variables from a file."""
+    env = {}
+    try:
+        with open(path, "r") as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                if "=" in line:
+                    key, val = line.split("=", 1)
+                    env[key.strip()] = val.strip()
+    except:
+        pass # Ignore missing .env
+    return env

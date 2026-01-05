@@ -1,0 +1,23 @@
+# NSN (Network Security Navigator)
+# High-level DNS Wrapper
+
+import _network
+
+def resolve(hostname):
+    """
+    Resolve a hostname to an IP address.
+    """
+    return _network.dns_resolve(hostname)
+
+def reverse_lookup(ip_address):
+    """
+    Perform a reverse DNS lookup.
+    """
+    return _network.dns_reverse(ip_address)
+
+class Resolver:
+    def __init__(self, nameservers=None):
+        self.nameservers = nameservers
+    
+    def query(self, qname, qtype="A"):
+        return _network.dns_query(qname, qtype, servers=self.nameservers)

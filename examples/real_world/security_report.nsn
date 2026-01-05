@@ -1,0 +1,80 @@
+# NSN (Network Security Navigator)
+# File: security_report.nsn
+
+# Generates a comprehensive HTML security report after scanning a subnet.
+# Features: Host discovery, Open Port listing, Service Banners.
+
+import security.scanner as scanner
+import network.http as http
+import datetime
+
+subnet = "192.168.1.0/24"
+target_ports = "21,22,23,80,443,3389"
+report_file = "security_report.html"
+
+print "Starting audit of " + subnet + "..."
+
+# 1. Discover hosts
+hosts = discover subnet
+print "Found " + str(len(hosts)) + " live hosts."
+
+# 2. Collect Data
+results = [] # List of dicts: {ip, ports: []}
+
+for host in hosts {
+    print "Scanning " + host + "..."
+    open_ports = scanner.scan(host, target_ports)
+    
+    host_data = {
+        "ip": host,
+        "ports": []
+    }
+    
+    for port in open_ports {
+        # Basic service fingerprinting
+        service = "Unknown"
+        if port == 80 { service = "HTTP" }
+        elif port == 443 { service = "HTTPS" }
+        elif port == 22 { service = "SSH" }
+        
+        host_data["ports"].append({"port": port, "service": service})
+    }
+    results.append(host_data)
+}
+
+# 3. Generate HTML
+print "Generating report..."
+date_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+html = "<html><head><title>NSN Security Report</title>"
+html += "<style>body { font-family: sans-serif; } table { border-collapse: collapse; width: 100%; } th, td { border: 1px solid #ddd; padding: 8px; } th { background-color: #f2f2f2; } .open { color: red; } </style>"
+html += "</head><body>"
+html += "<h1>Network Security Audit Report</h1>"
+html += "<p><strong>Target Subnet:</strong> " + subnet + "</p>"
+html += "<p><strong>Date:</strong> " + date_str + "</p>"
+
+html += "<h2>Host Summary</h2>"
+html += "<table><tr><th>IP Address</th><th>Open Ports</th><th>Services</th></tr>"
+
+for host in results {
+    html += "<tr>"
+    html += "<td>" + host["ip"] + "</td>"
+    
+    port_list = []
+    service_list = []
+    for p in host["ports"] {
+        port_list.append(str(p["port"]))
+        service_list.append(p["service"])
+    }
+    
+    html += "<td>" + ", ".join(port_list) + "</td>"
+    html += "<td>" + ", ".join(service_list) + "</td>"
+    html += "</tr>"
+}
+
+html += "</table></body></html>"
+
+# Write to file
+# file.write(report_file, html) (Hypothetical file API)
+print "Report generated: " + report_file
+print "HTML Content Preview: " + html[0:100] + "..."

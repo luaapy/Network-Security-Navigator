@@ -1,0 +1,60 @@
+# NSN Makefile template
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+bindir = @bindir@
+libdir = @libdir@
+includedir = @includedir@
+
+CC = @CC@
+CFLAGS = @CFLAGS@ -I./Include -I./Include/core -I./Include/internal -I./Include/network
+LDFLAGS = @LDFLAGS@
+LIBS = @LIBS@
+
+# Core Interpreter Sources
+NSN_SRCS = \
+    Nsn/nsn_memory.c \
+    Nsn/nsn_state.c \
+    Nsn/ceval.c \
+    Nsn/errors.c \
+    Nsn/import.c \
+    Nsn/compile.c \
+    Nsn/nsn_gc.c
+
+# Built-in Object Sources
+OBJ_SRCS = \
+    Objects/object.c \
+    Objects/typeobject.c \
+    Objects/intobject.c \
+    Objects/floatobject.c \
+    Objects/stringobject.c \
+    Objects/listobject.c \
+    Objects/dictobject.c \
+    Objects/boolobject.c \
+    Objects/moduleobject.c \
+    Objects/ipaddrobject.c \
+    Objects/networkobject.c \
+    Objects/packetobject.c
+
+MAIN_SRC = Programs/nsn.c
+
+ALL_SRCS = $(NSN_SRCS) $(OBJ_SRCS) $(MAIN_SRC)
+ALL_OBJS = $(ALL_SRCS:.c=.o)
+
+all: nsn
+
+nsn: $(ALL_OBJS)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o nsn $(ALL_OBJS) $(LIBS)
+
+.c.o:
+	$(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+	rm -f nsn $(ALL_OBJS)
+
+install: nsn
+	install -d $(DESTDIR)$(bindir)
+	install -m 755 nsn $(DESTDIR)$(bindir)
+	install -d $(DESTDIR)$(includedir)/nsn
+	cp -r Include/* $(DESTDIR)$(includedir)/nsn/
+
+.PHONY: all clean install

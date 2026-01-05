@@ -1,0 +1,16 @@
+// Auto-generated configuration
+#define NSN_VERSION "1.0.0"
+#define NSN_VERSION_MAJOR 1
+#define NSN_VERSION_MINOR 0
+#define NSN_VERSION_PATCH 0
+
+// Feature flags
+#cmakedefine HAVE_LIBPCAP 1
+#cmakedefine HAVE_OPENSSL 1
+#cmakedefine HAVE_LIBSSH 1
+#cmakedefine ENABLE_JIT 1
+
+// System capabilities
+#cmakedefine HAVE_SOCKET 1
+#cmakedefine HAVE_EPOLL 1
+#cmakedefine HAVE_KQUEUE 1

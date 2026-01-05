@@ -1,0 +1,47 @@
+# NSN (Network Security Navigator)
+# Collections Abstract Base Classes
+
+class Sized:
+    def __len__(self):
+        raise NotImplementedError
+
+class Iterable:
+    def __iter__(self):
+        raise NotImplementedError
+
+class Collection(Sized, Iterable):
+    pass
+
+class Sequence(Collection):
+    def __getitem__(self, index):
+        raise NotImplementedError
+    
+    def __contains__(self, value):
+        for item in self:
+            if item == value:
+                return True
+        return False
+
+class MutableSequence(Sequence):
+    def __setitem__(self, index, value):
+        raise NotImplementedError
+    def __delitem__(self, index):
+        raise NotImplementedError
+    def insert(self, index, value):
+        raise NotImplementedError
+
+class Mapping(Collection):
+    def __getitem__(self, key):
+        raise NotImplementedError
+    def keys(self):
+        raise NotImplementedError
+    def values(self):
+        raise NotImplementedError
+    def items(self):
+        raise NotImplementedError
+
+class MutableMapping(Mapping):
+    def __setitem__(self, key, value):
+        raise NotImplementedError
+    def __delitem__(self, key):
+        raise NotImplementedError

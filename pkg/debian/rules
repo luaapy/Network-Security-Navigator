@@ -1,0 +1,25 @@
+#!/usr/bin/make -f
+
+# Standard debhelper rules
+%:
+	dh $@
+
+# Custom configure options for security and performance
+override_dh_auto_configure:
+	./configure --prefix=/usr --enable-optimizations --with-openssl --with-libpcap
+
+# Build the main binary and standard library
+override_dh_auto_build:
+	dh_auto_build -- all
+
+# Run the NSN test suite
+override_dh_auto_test:
+	./nsn Lib/test/test_net.nsn
+
+# Install binary to /usr/bin and library to /usr/lib/nsn
+override_dh_auto_install:
+	dh_auto_install
+	install -d debian/nsn/usr/bin
+	install -m 0755 nsn debian/nsn/usr/bin/nsn
+	install -d debian/nsn/usr/lib/nsn
+	cp -r Lib/* debian/nsn/usr/lib/nsn/

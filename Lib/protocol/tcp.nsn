@@ -1,0 +1,42 @@
+# NSN (Network Security Navigator)
+# High-level TCP Protocol Wrapper
+
+import _network
+
+class Connection:
+    def __init__(self, host, port, timeout=5.0):
+        self.host = host
+        self.port = port
+        self.timeout = timeout
+        self.sock = None
+
+    def connect(self):
+        self.sock = _network.socket(_network.AF_INET, _network.SOCK_STREAM)
+        # self.sock.settimeout(self.timeout)
+        return self.sock.connect((self.host, self.port))
+
+    def send(self, data):
+        if not self.sock:
+            raise RuntimeError("Not connected")
+        if type(data) == str:
+            data = data.encode()
+        return self.sock.send(data)
+
+    def recv(self, bufsize=4096):
+        if not self.sock:
+            raise RuntimeError("Not connected")
+        return self.sock.recv(bufsize)
+
+    def close(self):
+        if self.sock:
+            self.sock.close()
+            self.sock = None
+
+def get(host, port, data):
+    conn = Connection(host, port)
+    try:
+        conn.connect()
+        conn.send(data)
+        return conn.recv()
+    finally:
+        conn.close()

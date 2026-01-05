@@ -1,0 +1,74 @@
+#!/bin/sh
+
+# NSN (Network Security Navigator)
+# build configuration script
+# Based on the python-config template
+
+exit_with_usage ()
+{
+    echo "Usage: $0 [ --prefix ] [ --exec-prefix ] [ --includes ] [ --libs ] [ --cflags ] [ --ldflags ] [ --extension-suffix ] [ --configdir ] [ --help ]"
+    exit $1
+}
+
+if [ $# -eq 0 ] ; then
+    exit_with_usage 1
+fi
+
+# Configuration variables (to be filled by build system)
+prefix="@prefix@"
+exec_prefix="@exec_prefix@"
+includedir="@includedir@"
+libdir="@libdir@"
+datarootdir="@datarootdir@"
+VERSION="@NSN_VERSION@"
+LIBNSN="@LIBNSN@"
+SYSLIBS="@LIBS@"
+ABIFLAGS="@ABIFLAGS@"
+LIBS="-lnsn${VERSION}${ABIFLAGS} ${SYSLIBS}"
+BASECFLAGS="@BASECFLAGS@"
+LDVERSION="@LDVERSION@"
+PYTHONFRAMEWORK="@PYTHONFRAMEWORK@"
+INCLUDEDIR="-I${includedir}/nsn${VERSION}${ABIFLAGS}"
+PLATINCDIR="-I${includedir}/nsn${VERSION}${ABIFLAGS}"
+
+# General options
+for arg in "$@" ; do
+    case $arg in
+        --help)
+            exit_with_usage 0
+        ;;
+        --prefix)
+            echo "$prefix"
+        ;;
+        --exec-prefix)
+            echo "$exec_prefix"
+        ;;
+        --includes)
+            echo "$INCLUDEDIR $PLATINCDIR"
+        ;;
+        --cflags)
+            echo "$INCLUDEDIR $PLATINCDIR $BASECFLAGS"
+        ;;
+        --libs)
+            echo "$LIBS"
+        ;;
+        --ldflags)
+            echo "-L$libdir $LIBS"
+        ;;
+        --extension-suffix)
+            echo ".nsn.so"
+        ;;
+        --configdir)
+            echo "$libdir/nsn${VERSION}/config-${LDVERSION}"
+        ;;
+        --version)
+            echo "$VERSION"
+        ;;
+        *)
+            echo "Unknown option: $arg"
+            exit_with_usage 1
+        ;;
+    esac
+done
+
+exit 0

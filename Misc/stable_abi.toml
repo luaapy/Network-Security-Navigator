@@ -1,0 +1,48 @@
+# NSN Stable ABI Definition
+# 
+# This file defines the symbols that are guaranteed to remain binary compatible
+# across minor releases. Extensions compiled against the stable ABI will 
+# continue to work with newer versions of the NSN interpreter.
+
+[metadata]
+version = "1.0"
+description = "Initial stable ABI for NSN core"
+
+[functions]
+
+# --- Memory Management ---
+"NsnMem_Malloc" = { added = "1.0" }
+"NsnMem_Free" = { added = "1.0" }
+"NsnMem_Realloc" = { added = "1.0" }
+
+# --- Objects & Reference Counting ---
+"NsnObject_IncRef" = { added = "1.0" }
+"NsnObject_DecRef" = { added = "1.0" }
+"NsnObject_GetAttr" = { added = "1.0" }
+"NsnObject_SetAttr" = { added = "1.0" }
+"NsnObject_Call" = { added = "1.0" }
+
+# --- Integral Types ---
+"NsnLong_FromLong" = { added = "1.0" }
+"NsnLong_AsLong" = { added = "1.0" }
+"NsnString_FromString" = { added = "1.0" }
+"NsnString_AsUTF8" = { added = "1.0" }
+
+# --- Errors & Exceptions ---
+"NsnErr_SetString" = { added = "1.0" }
+"NsnErr_Occurred" = { added = "1.0" }
+"NsnErr_Clear" = { added = "1.0" }
+"NsnExc_NetworkError" = { type = "object", added = "1.0" }
+"NsnExc_SecurityError" = { type = "object", added = "1.0" }
+
+# --- Module System ---
+"NsnModule_Create" = { added = "1.0" }
+"Nsn_ImportModule" = { added = "1.0" }
+
+# --- Network Specific ---
+"NsnIPAddr_FromStr" = { added = "1.0" }
+"NsnSocket_New" = { added = "1.0" }
+
+[types]
+"nsn_object" = { added = "1.0" }
+"nsn_type" = { added = "1.0" }

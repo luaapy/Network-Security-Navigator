@@ -1,0 +1,42 @@
+# NSN (Network Security Navigator)
+# Advanced DNS Utilities
+
+import protocol.dns as dns
+import _network
+
+def brute_force_subdomains(domain, wordlist):
+    """
+    Attempt to find subdomains using a wordlist.
+    """
+    found = []
+    for word in wordlist:
+        subdomain = f"{word}.{domain}"
+        try:
+            ip = dns.resolve(subdomain)
+            if ip:
+                found.append((subdomain, ip))
+        except:
+            pass
+    return found
+
+def zone_transfer(domain, nameserver=None):
+    """
+    Attempt a DNS zone transfer (AXFR).
+    """
+    if not nameserver:
+        # Attempt to find NS records first
+        ns_records = _network.dns_query(domain, "NS")
+        if not ns_records:
+            return []
+        nameserver = ns_records[0]
+
+    return _network.dns_axfr(domain, nameserver)
+
+def get_records(domain, types=["A", "MX", "TXT", "NS"]):
+    """
+    Retrieve multiple record types for a domain.
+    """
+    results = {}
+    for t in types:
+        results[t] = _network.dns_query(domain, t)
+    return results

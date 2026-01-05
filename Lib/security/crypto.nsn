@@ -1,0 +1,54 @@
+# NSN (Network Security Navigator)
+# High-level Cryptography Utilities
+
+import _crypto.aes as _aes
+
+class AES:
+    def __init__(self, key, mode="cbc", iv=None):
+        self.key = key
+        self.mode = mode
+        self.iv = iv or b"\x00" * 16
+
+    def encrypt(self, data):
+        if type(data) == str:
+            data = data.encode()
+        return _aes.encrypt(self.key, data, self.iv, self.mode)
+
+    def decrypt(self, data):
+        return _aes.decrypt(self.key, data, self.iv, self.mode)
+
+def generate_key(length=32):
+    """Generate a random key of specified length (default 32 bytes for AES-256)."""
+    return _aes.generate_key(length)
+
+def encrypt_file(path, key, out_path=None):
+    """Encrypt a file using AES-256-CBC."""
+    if out_path is None:
+        out_path = path + ".enc"
+    
+    with open(path, "rb") as f:
+        data = f.read()
+    
+    iv = generate_key(16)
+    cipher = AES(key, mode="cbc", iv=iv)
+    encrypted = cipher.encrypt(data)
+    
+    with open(out_path, "wb") as f:
+        f.write(iv + encrypted)
+
+def decrypt_file(path, key, out_path=None):
+    """Decrypt a file using AES-256-CBC."""
+    if out_path is None and path.endswith(".enc"):
+        out_path = path[:-4]
+    
+    with open(path, "rb") as f:
+        iv_data = f.read()
+    
+    iv = iv_data[:16]
+    encrypted = iv_data[16:]
+    
+    cipher = AES(key, mode="cbc", iv=iv)
+    decrypted = cipher.decrypt(encrypted)
+    
+    with open(out_path, "wb") as f:
+        f.write(decrypted)

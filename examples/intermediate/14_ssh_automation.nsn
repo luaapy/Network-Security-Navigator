@@ -1,0 +1,21 @@
+# NSN Example: SSH Automation
+
+target = "192.168.1.100"
+user = "admin"
+pass = "secret123"
+
+print "Connecting to " + target + " as " + user
+
+try {
+    session = connect ssh@target {
+        user: user,
+        auth: password(pass)
+    }
+    
+    print "Connection successful!"
+    result = session.exec("cat /proc/uptime")
+    print "Uptime: " + result
+    
+} catch {
+    print "SSH connection failed."
+}

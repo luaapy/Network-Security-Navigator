@@ -1,0 +1,48 @@
+# NSN (Network Security Navigator)
+# File: test_network.nsn
+# Description: Integration tests for high-level networking operations.
+
+import _network
+import _security
+
+func test_ping_flow() {
+    print("[Integration] Testing Ping Flow...")
+    target = "127.0.0.1"
+    res = _network.ping(target, timeout=2)
+    
+    if (res.status == "UP") {
+        print("  - Localhost is UP (Latency: " + res.latency + "ms)")
+    } else {
+        print("  - Localhost Ping Failed")
+        exit(1)
+    }
+}
+
+func test_port_scan() {
+    print("[Integration] Testing Port Scan...")
+    target = IPAddress("127.0.0.1")
+    ports = [80, 443, 8080]
+    
+    results = _network.scan(target, ports)
+    print("  - Scan results for " + target + ": " + results)
+}
+
+func test_crypto_hashing() {
+    print("[Integration] Testing Crypto Hashing...")
+    data = "nsn_security_test_payload"
+    hash_val = _security.sha256(data)
+    
+    if (len(hash_val) == 64) {
+        print("  - SHA256 Hash successful: " + hash_val)
+    } else {
+        print("  - SHA256 Hash failed")
+        exit(1)
+    }
+}
+
+# Run all tests
+test_ping_flow()
+test_port_scan()
+test_crypto_hashing()
+
+print("[Integration] All network integration tests PASSED.")

@@ -1,0 +1,26 @@
+# NSN (Network Security Navigator) Scan Benchmark
+# File: scan_benchmark.nsn
+# This script benchmarks the built‑in port scanner.
+
+import security.scanner as scanner
+import datetime
+
+func bench_scan(host, ports, iterations) {
+    start = datetime.now()
+    i = 0
+    while i < iterations {
+        var result = scanner.scan(host, ports)
+        i = i + 1
+    }
+    end = datetime.now()
+    secs = (end - start).total_seconds()
+    ops = iterations / secs
+    print("Scan " + host + " ports " + str(ports) + " -> " + str(iterations) + " ops in " + str(secs) + "s (" + str(ops) + " ops/sec)")
+}
+
+# Configuration
+var target_host = "127.0.0.1"
+var target_ports = "1-1024"
+var iters = 100
+
+bench_scan(target_host, target_ports, iters)

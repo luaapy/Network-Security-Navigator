@@ -1,0 +1,44 @@
+name: Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libpcap-dev libssl-dev libssh-dev
+
+    - name: Build (Linux/macOS)
+      if: runner.os != 'Windows'
+      run: |
+        ./configure
+        make
+        
+    - name: Build (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        cd PCbuild
+        ./build.bat
+        
+    - name: Run Tests
+      run: |
+        python3 Tools/buildbot/test.py

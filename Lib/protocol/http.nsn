@@ -1,0 +1,34 @@
+# NSN (Network Security Navigator)
+# High-level HTTP Client
+
+import _network
+
+class Response:
+    def __init__(self, status, headers, body):
+        self.status = status
+        self.headers = headers
+        self.body = body
+
+    def json(self):
+        import json
+        return json.loads(self.body.decode())
+
+def get(url, headers=None, timeout=10.0):
+    """
+    Perform an HTTP GET request.
+    """
+    res = _network.http_request("GET", url, headers=headers, timeout=timeout)
+    return Response(res['status'], res['headers'], res['body'])
+
+def post(url, data=None, json=None, headers=None, timeout=10.0):
+    """
+    Perform an HTTP POST request.
+    """
+    if json:
+        import json as json_mod
+        data = json_mod.dumps(json)
+        headers = headers or {}
+        headers['Content-Type'] = 'application/json'
+    
+    res = _network.http_request("POST", url, data=data, headers=headers, timeout=timeout)
+    return Response(res['status'], res['headers'], res['body'])

@@ -1,0 +1,3 @@
+# Simple Port Scan
+# target = 192.168.1.1
+# scan target:80

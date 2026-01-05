@@ -1,0 +1,19 @@
+trigger: none
+
+pr: none
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+- stage: Release
+  jobs:
+  - job: CreateRelease
+    steps:
+    - script: |
+        ./scripts/package.sh
+      displayName: 'Package NSN'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: 'dist'
+        ArtifactName: 'release-packages'

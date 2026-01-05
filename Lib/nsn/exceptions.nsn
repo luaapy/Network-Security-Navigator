@@ -1,0 +1,43 @@
+# NSN (Network Security Navigator)
+# Core Exception Hierarchy
+
+class BaseException(Exception):
+    pass
+
+class Exception(BaseException):
+    pass
+
+class TypeError(Exception):
+    pass
+
+class ValueError(Exception):
+    pass
+
+class RuntimeError(Exception):
+    pass
+
+class ImportError(Exception):
+    pass
+
+class MemoryError(Exception):
+    pass
+
+class SystemError(Exception):
+    pass
+
+# NSN Specific Exceptions
+class NetworkError(Exception):
+    """Base class for all network-related errors."""
+    pass
+
+class SecurityError(Exception):
+    """Base class for all security-related errors."""
+    pass
+
+class SandboxViolation(SecurityError):
+    """Raised when an operation violates sandbox restrictions."""
+    pass
+
+class ProtocolError(NetworkError):
+    """Raised for protocol-level errors."""
+    pass

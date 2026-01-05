@@ -1,0 +1,47 @@
+# NSN Example: Service Detection
+
+# Discover open services on a host using the built‑in scanner module.
+# The script performs a TCP connect scan on common ports and prints the
+# detected service name (if any) based on simple banner grabbing.
+
+import security.scanner as scanner
+import network.tcp as tcp
+import network.http as http
+
+host = "192.168.1.100"
+ports = "1-1024"
+
+print "Scanning " + host + " for open services on ports " + ports
+
+# Perform a port scan – returns a dict of open ports
+open_ports = scanner.scan(host, ports)
+
+if len(open_ports) == 0 {
+    print "No open ports found."
+} else {
+    print "Open ports:" 
+    for port in open_ports {
+        print " - " + str(port)
+        # Simple service detection based on port number
+        if port == 80 or port == 8080 {
+            # Try an HTTP GET request
+            resp = http.get("http://" + host + ":" + str(port) + "/")
+            print "   Service: HTTP (status " + str(resp.status_code) + ")"
+        } elif port == 22 {
+            print "   Service: SSH"
+        } elif port == 443 {
+            print "   Service: HTTPS"
+        } else {
+            # Attempt a generic banner grab using a TCP socket
+            sock = tcp.connect(host, port)
+            if sock != null {
+                sock.send("\r\n")
+                banner = sock.recv(256)
+                print "   Banner: " + banner
+                sock.close()
+            } else {
+                print "   Service: Unknown"
+            }
+        }
+    }
+}

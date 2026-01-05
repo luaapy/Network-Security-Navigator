@@ -1,0 +1,26 @@
+NSN Miscellaneous Files
+=======================
+
+This directory contains various files used by the NSN build system, 
+packaging tools, and for specialized development tasks.
+
+Contents
+--------
+
+* `ACKS`: Acknowledgments list for project contributors.
+* `HISTORY`: Significant milestones in the project's development.
+* `NEWS.d/`: Directory for individual news entries (RST format).
+* `python-config.in`: Template for the `nsn-config` script, used to
+  retrieve build flags for embedding the interpreter.
+* `stable_abi.toml`: Definition of the NSN stable ABI for extensions.
+* `valgrind-nsn.supp`: Valgrind suppression file for filtering out
+  known false positives in the interpreter and core libraries.
+* `python-config.in`: Source for the configuration script.
+
+Usage
+-----
+
+Most files in this directory are used automatically by the build system
+or the CI/CD pipeline. Developers adding new C API functions should update
+`stable_abi.toml` if the new functions are intended to be part of the stable
+binary interface.

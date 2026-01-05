@@ -1,0 +1,30 @@
+# NSN (Network Security Navigator)
+# High-level Raw Packet Handling
+
+import _network
+
+class Packet:
+    def __init__(self, data=None):
+        if data:
+            self._pkt = _network.packet_parse(data)
+        else:
+            self._pkt = _network.packet_new()
+
+    def set_field(self, layer, field, value):
+        self._pkt.set_field(layer, field, value)
+
+    def get_field(self, layer, field):
+        return self._pkt.get_field(layer, field)
+
+    def build(self):
+        return self._pkt.build()
+
+    def __repr__(self):
+        return f"<Packet: {self._pkt.summary()}>"
+
+def sniff(interface, count=10, filter=""):
+    """
+    Sniff packets on a given interface.
+    """
+    raw_pkts = _network.sniff(interface, count, filter)
+    return [Packet(p) for p in raw_pkts]

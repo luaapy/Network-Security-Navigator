@@ -1,0 +1,33 @@
+# NSN (Network Security Navigator)
+# Host Discovery Utilities
+
+import protocol.icmp as icmp
+import _network
+
+def ping_sweep(network_cidr):
+    """
+    Perform an ICMP ping sweep on a CIDR range.
+    """
+    import nsn.types as types
+    net = types.Network(network_cidr)
+    alive_hosts = []
+    
+    for ip in net:
+        if icmp.ping(str(ip), count=1, timeout=0.5):
+            alive_hosts.append(str(ip))
+            
+    return alive_hosts
+
+def arp_scan(interface):
+    """
+    Perform an ARP scan on the local network.
+    """
+    # Uses the low-level _network.arp_request
+    hosts = _network.arp_scan(interface)
+    return hosts
+
+def list_interfaces():
+    """
+    List available network interfaces.
+    """
+    return _network.interfaces()

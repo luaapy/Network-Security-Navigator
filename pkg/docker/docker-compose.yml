@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  nsn-dev:
+    build:
+      context: ../..
+      dockerfile: pkg/docker/Dockerfile
+    volumes:
+      - ../..:/app
+    environment:
+      - NSN_PATH=/app/Lib
+    working_dir: /app
+    stdin_open: true
+    tty: true
+
+  nsn-alpine:
+    build:
+      context: ../..
+      dockerfile: pkg/docker/Dockerfile.alpine
+    command: ["--version"]
+
+  # Example of running a specific NSN script in a container
+  scanner:
+    build:
+      context: ../..
+      dockerfile: pkg/docker/Dockerfile.alpine
+    volumes:
+      - ../../examples:/examples
+    command: ["/examples/basic/02_port_scan.nsn"]

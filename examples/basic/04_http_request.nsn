@@ -1,0 +1,10 @@
+# NSN Example: HTTP Request
+
+url = "https://api.github.com"
+print "Fetching API info from " + url
+
+response = get url
+if response {
+    print "Received response status: " + response.status
+    # print response.body
+}

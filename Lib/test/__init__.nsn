@@ -1,0 +1,10 @@
+# NSN (Network Security Navigator)
+# File: __init__.nsn
+
+# Test package initializer – re-export test modules for convenience
+
+import test_net
+import test_security
+import test_utils
+
+__all__ = ["test_net", "test_security", "test_utils"]

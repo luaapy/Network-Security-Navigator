@@ -1,0 +1,27 @@
+# NSN (Network Security Navigator)
+# File: 21_mitm_detection.nsn
+
+# Detect potential Man-in-the-Middle attacks by monitoring ARP tables and
+# checking for duplicate IP-MAC mappings.
+
+import network.arp as arp
+import network.packet as pkt
+import datetime
+
+iface = "eth0"
+interval = 5  # seconds between checks
+
+print "Starting MITM detection on " + iface + "..."
+
+prev_table = arp.table(iface)
+while true {
+    sleep(interval)
+    cur_table = arp.table(iface)
+    # Find IPs with multiple MAC addresses
+    for ip, macs in cur_table {
+        if len(macs) > 1 {
+            print "[ALERT] Potential MITM on " + ip + ": multiple MACs " + str(macs)
+        }
+    }
+    prev_table = cur_table
+}

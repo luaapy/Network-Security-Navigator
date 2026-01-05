@@ -1,0 +1,28 @@
+# NSN Example: Packet Capture
+
+# Capture live network traffic on a given interface for a short period
+# and print a summary of the captured packets (protocol, src, dst).
+
+import network.packet as pcap
+import datetime
+
+iface = "eth0"
+duration = 5  # seconds
+
+print "Starting packet capture on " + iface + " for " + str(duration) + " seconds..."
+
+# Start capture (returns a capture object)
+capture = pcap.capture(iface)
+
+# Run capture for the specified duration
+start = datetime.now()
+while (datetime.now() - start).total_seconds() < duration {
+    pkt = capture.next()
+    if pkt != null {
+        # Assume pkt has fields: proto, src, dst
+        print "[" + pkt.proto + "] " + pkt.src + " -> " + pkt.dst
+    }
+}
+
+capture.stop()
+print "Capture complete."

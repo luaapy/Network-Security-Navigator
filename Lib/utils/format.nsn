@@ -1,0 +1,54 @@
+# NSN (Network Security Navigator)
+# String Formatting and Terminal Styling
+
+# ANSI Color Codes
+COLORS = {
+    "red": "\033[31m",
+    "green": "\033[32m",
+    "yellow": "\033[33m",
+    "blue": "\033[34m",
+    "magenta": "\033[35m",
+    "cyan": "\033[36m",
+    "white": "\033[37m",
+    "reset": "\033[0m",
+    "bold": "\033[1m"
+}
+
+def color(text, color_name):
+    c = COLORS.get(color_name.lower(), "")
+    reset = COLORS["reset"]
+    return f"{c}{text}{reset}"
+
+def table(headers, rows):
+    """Generate a simple ASCII table."""
+    # Calculate column widths
+    widths = [len(h) for h in headers]
+    for row in rows:
+        for i, val in enumerate(row):
+            widths[i] = max(widths[i], len(str(val)))
+    
+    # Generate border
+    border = "+" + "+".join(["-" * (w + 2) for w in widths]) + "+"
+    
+    lines = [border]
+    
+    # Header
+    header_line = "|" + "|".join([f" {headers[i].ljust(widths[i])} " for i in range(len(headers))]) + "|"
+    lines.append(header_line)
+    lines.append(border)
+    
+    # Rows
+    for row in rows:
+        row_line = "|" + "|".join([f" {str(row[i]).ljust(widths[i])} " for i in range(len(row))]) + "|"
+        lines.append(row_line)
+        
+    lines.append(border)
+    return "\n".join(lines)
+
+def human_size(bytes):
+    """Convert bytes to human readable format (KB, MB, GB)."""
+    for unit in ['B', 'KB', 'MB', 'GB', 'TB']:
+        if bytes < 1024:
+            return f"{bytes:.2f} {unit}"
+        bytes /= 1024
+    return f"{bytes:.2f} PB"

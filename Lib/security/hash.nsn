@@ -1,0 +1,46 @@
+# NSN (Network Security Navigator)
+# High-level Hashing Utilities
+
+import _crypto.md5 as _md5
+import _crypto.sha256 as _sha256
+import _crypto.sha512 as _sha512
+
+def md5(data):
+    """Return MD5 hex digest of data."""
+    if type(data) == str:
+        data = data.encode()
+    return _md5.hex(data)
+
+def sha256(data):
+    """Return SHA256 hex digest of data."""
+    if type(data) == str:
+        data = data.encode()
+    return _sha256.hex(data)
+
+def sha512(data):
+    """Return SHA512 hex digest of data."""
+    if type(data) == str:
+        data = data.encode()
+    return _sha512.hex(data)
+
+class Hash:
+    def __init__(self, algorithm):
+        self.algorithm = algorithm.lower()
+        if self.algorithm == 'md5':
+            self._mod = _md5
+        elif self.algorithm == 'sha256':
+            self._mod = _sha256
+        elif self.algorithm == 'sha512':
+            self._mod = _sha512
+        else:
+            raise ValueError(f"Unsupported algorithm: {algorithm}")
+        
+    def hex(self, data):
+        if type(data) == str:
+            data = data.encode()
+        return self._mod.hex(data)
+    
+    def raw(self, data):
+        if type(data) == str:
+            data = data.encode()
+        return self._mod.hash(data)

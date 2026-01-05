@@ -1,0 +1,37 @@
+# Custom protocol example
+
+# Define a simple custom protocol with a header and payload.
+# This example demonstrates creating a packet, serializing it, and sending it over TCP.
+
+import network.tcp as tcp
+import network.packet as pkt
+
+# Define a packet structure (header: 2 bytes type, length; payload: bytes)
+func make_custom_packet(pkt_type, data) {
+    header = pkt_type.to_bytes(2, "big") + len(data).to_bytes(2, "big")
+    return pkt.from_bytes(header + data)
+}
+
+host = "example.com"
+port = 9000
+
+print "Connecting to " + host + ":" + str(port)
+conn = tcp.connect(host, port)
+if conn == null {
+    print "Connection failed"
+    exit 1
+}
+
+# Create a custom packet of type 0x01 with a hello payload
+custom_pkt = make_custom_packet(0x01, "Hello from NSN".encode())
+
+# Send the raw packet bytes
+conn.send(custom_pkt.raw())
+print "Custom packet sent"
+
+# Receive response (assume same format)
+resp_bytes = conn.recv(1024)
+resp_pkt = pkt.from_bytes(resp_bytes)
+print "Received response of type " + resp_pkt.header.type.to_string()
+
+conn.close()

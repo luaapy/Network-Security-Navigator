@@ -1,0 +1,50 @@
+# NSN (Network Security Navigator)
+# Built-in function extensions
+
+# These are secondary built-ins that may be imported into 
+# the global namespace by the interpreter on startup.
+
+def all(iterable):
+    for item in iterable:
+        if not item:
+            return False
+    return True
+
+def any(iterable):
+    for item in iterable:
+        if item:
+            return True
+    return False
+
+def enumerate(iterable, start=0):
+    n = start
+    for elem in iterable:
+        yield n, elem
+        n += 1
+
+def sum(iterable, start=0):
+    total = start
+    for x in iterable:
+        total += x
+    return total
+
+def min(*args, **kwargs):
+    # Simplified implementation
+    if not args:
+        raise TypeError("min expected 1 argument, got 0")
+    it = args[0] if len(args) == 1 else args
+    res = None
+    for x in it:
+        if res is None or x < res:
+            res = x
+    return res
+
+def max(*args, **kwargs):
+    if not args:
+        raise TypeError("max expected 1 argument, got 0")
+    it = args[0] if len(args) == 1 else args
+    res = None
+    for x in it:
+        if res is None or x > res:
+            res = x
+    return res

@@ -1,0 +1,32 @@
+# NSN (Network Security Navigator) Crypto Benchmark
+# File: crypto_benchmark.nsn
+# This script benchmarks the built‑in cryptographic hash functions.
+# It measures how many hash operations can be performed per second.
+
+import security.hash as hash
+import datetime
+
+# Helper to run a benchmark
+func bench_hash(name, fn, data, iterations) {
+    start = datetime.now()
+    i = 0
+    while i < iterations {
+        fn(data)
+        i = i + 1
+    }
+    end = datetime.now()
+    elapsed = end - start
+    secs = elapsed.total_seconds()
+    ops = iterations / secs
+    print(name + " -> " + str(iterations) + " ops in " + str(secs) + "s (" + str(ops) + " ops/sec)")
+}
+
+# Test data (a moderately sized string)
+var test_data = "The quick brown fox jumps over the lazy dog" * 10
+
+# Number of iterations – adjust for your machine
+var iters = 100000
+
+bench_hash("SHA256", hash.sha256, test_data, iters)
+bench_hash("SHA1",   hash.sha1,   test_data, iters)
+bench_hash("MD5",    hash.md5,    test_data, iters)

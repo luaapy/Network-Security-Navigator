@@ -1,0 +1,61 @@
+# NSN (Network Security Navigator) Network Benchmark
+# File: network_benchmark.nsn
+# This script benchmarks basic network operations such as ping, TCP connect, and HTTP GET.
+
+import network.tcp as tcp
+import network.http as http
+import network.icmp as icmp
+import datetime
+
+func bench_ping(host, iterations) {
+    start = datetime.now()
+    i = 0
+    while i < iterations {
+        icmp.ping(host)
+        i = i + 1
+    }
+    end = datetime.now()
+    secs = (end - start).total_seconds()
+    ops = iterations / secs
+    print("Ping " + host + " -> " + str(iterations) + " ops in " + str(secs) + "s (" + str(ops) + " ops/sec)")
+}
+
+func bench_tcp_connect(host, port, iterations) {
+    start = datetime.now()
+    i = 0
+    while i < iterations {
+        var s = tcp.connect(host, port)
+        if s != null {
+            s.close()
+        }
+        i = i + 1
+    }
+    end = datetime.now()
+    secs = (end - start).total_seconds()
+    ops = iterations / secs
+    print("TCP connect " + host + ":" + str(port) + " -> " + str(iterations) + " ops in " + str(secs) + "s (" + str(ops) + " ops/sec)")
+}
+
+func bench_http_get(url, iterations) {
+    start = datetime.now()
+    i = 0
+    while i < iterations {
+        var resp = http.get(url)
+        i = i + 1
+    }
+    end = datetime.now()
+    secs = (end - start).total_seconds()
+    ops = iterations / secs
+    print("HTTP GET " + url + " -> " + str(iterations) + " ops in " + str(secs) + "s (" + str(ops) + " ops/sec)")
+}
+
+# Configuration
+var ping_host = "8.8.8.8"
+var tcp_host = "example.com"
+var tcp_port = 80
+var http_url = "http://example.com"
+var iters = 1000
+
+bench_ping(ping_host, iters)
+bench_tcp_connect(tcp_host, tcp_port, iters)
+bench_http_get(http_url, iters)

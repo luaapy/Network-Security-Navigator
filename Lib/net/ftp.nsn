@@ -1,0 +1,42 @@
+# NSN (Network Security Navigator)
+# FTP Client Utilities
+
+import protocol.tcp as tcp
+
+class FTPClient:
+    def __init__(self, host, port=21):
+        self.host = host
+        self.port = port
+        self.conn = tcp.Connection(host, port)
+
+    def connect(self):
+        self.conn.connect()
+        return self.conn.recv() # Expect 220 banner
+
+    def login(self, user="anonymous", password=""):
+        self.conn.send(f"USER {user}\r\n")
+        self.conn.recv()
+        self.conn.send(f"PASS {password}\r\n")
+        return self.conn.recv()
+
+    def list(self):
+        # Very simplified list (requires PASV/PORT handling in real impl)
+        self.conn.send("LIST\r\n")
+        return self.conn.recv()
+
+    def quit(self):
+        self.conn.send("QUIT\r\n")
+        self.conn.close()
+
+def check_anonymous(host):
+    """
+    Check if a host allows anonymous FTP login.
+    """
+    client = FTPClient(host)
+    try:
+        client.connect()
+        resp = client.login()
+        client.quit()
+        return "230" in resp
+    except:
+        return False

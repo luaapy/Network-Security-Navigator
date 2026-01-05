@@ -1,0 +1,49 @@
+# NSN (Network Security Navigator)
+# Automated Security Auditing
+
+import net.discover as discover
+import net.scan as scan
+import security.vuln as vuln
+
+class Audit:
+    def __init__(self, target_network):
+        self.target_network = target_network
+        self.hosts = []
+        self.results = {}
+
+    def run(self):
+        """
+        Run a full network audit.
+        1. Discover hosts
+        2. Scan ports
+        3. Identify vulnerabilities
+        """
+        print(f"Starting audit for {self.target_network}...")
+        self.hosts = discover.ping_sweep(self.target_network)
+        print(f"Found {len(self.hosts)} active hosts.")
+        
+        for host in self.hosts:
+            print(f"Auditing host: {host}...")
+            services = scan.port_scan(host, [21, 22, 80, 443, 8080])
+            vulnerabilities = vuln.scan_host_vulnerabilities(host)
+            
+            self.results[host] = {
+                "alive": True,
+                "services": services,
+                "vulnerabilities": vulnerabilities
+            }
+        
+    def generate_summary(self):
+        """Return a summary of the audit findings."""
+        summary = {
+            "total_hosts": len(self.hosts),
+            "vulnerable_hosts_count": 0,
+            "total_vulnerabilities": 0
+        }
+        
+        for host, data in self.results.items():
+            if data["vulnerabilities"]:
+                summary["vulnerable_hosts_count"] += 1
+                summary["total_vulnerabilities"] += len(data["vulnerabilities"])
+                
+        return summary

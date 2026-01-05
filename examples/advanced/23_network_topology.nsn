@@ -1,0 +1,29 @@
+# NSN (Network Security Navigator)
+# File: 23_network_topology.nsn
+
+# Build a simple network topology map by discovering hosts and their open ports.
+# The script performs a subnet discovery, then scans each host for common ports
+# and prints a adjacency list style representation.
+
+import security.scanner as scanner
+import network.tcp as tcp
+import network.icmp as icmp
+
+subnet = "192.168.1.0/24"
+print "Discovering hosts in " + subnet
+hosts = discover subnet
+
+print "Found " + len(hosts) + " hosts. Scanning for open ports..."
+
+common_ports = "22,80,443,8080"
+
+for host in hosts {
+    open_ports = scanner.scan(host, common_ports)
+    if len(open_ports) > 0 {
+        print host + " -> " + str(open_ports)
+    } else {
+        print host + " -> no common ports open"
+    }
+}
+
+print "Network topology discovery complete."

@@ -1,0 +1,67 @@
+# NSN (Network Security Navigator)
+# File: bandwidth_monitor.nsn
+
+# Real-time bandwidth usage monitor.
+# Captures traffic statistics from a network interface and calculates
+# upload/download rates in Mbps.
+
+import network.packet as pcap
+import datetime
+import time
+
+iface = "eth0"
+interval = 1.0  # seconds
+
+print "Monitoring bandwidth on " + iface + " (Ctrl+C to stop)..."
+print "Time\t\tRX (Mbps)\tTX (Mbps)"
+
+capture = pcap.capture(iface)
+
+# Initialize counters
+last_time = datetime.now()
+rx_bytes = 0
+tx_bytes = 0
+
+while true {
+    # In a real implementation, we would access kernel interface counters
+    # directly via /proc/net/dev or sysctl for efficiency.
+    # For this example, we'll simulate by counting captured packet lengths,
+    # which is slower but demonstrates the logic.
+    
+    # Process packets for 'interval' seconds
+    loop_start = datetime.now()
+    pkt_count = 0
+    while (datetime.now() - loop_start).total_seconds() < interval {
+        pkt = capture.next_nonblocking() 
+        if pkt != null {
+            # Assuming pkt has 'len' and 'direction' or similar properties
+            # This is pseudo-code for the example logic
+            # if pkt.dest_is_local: rx_bytes += pkt.len
+            # else: tx_bytes += pkt.len
+            
+            # Simulation:
+            rx_bytes += 1000
+            tx_bytes += 200
+            pkt_count += 1
+        } else {
+             time.sleep(0.01) # Avoid busy wait
+        }
+    }
+    
+    current_time = datetime.now()
+    delta_s = (current_time - last_time).total_seconds()
+    
+    if delta_s > 0 {
+        # Convert bytes to megabits
+        rx_mbps = (rx_bytes * 8.0) / (delta_s * 1000000.0)
+        tx_mbps = (tx_bytes * 8.0) / (delta_s * 1000000.0)
+        
+        timestamp = current_time.strftime("%H:%M:%S")
+        print timestamp + "\t" + str(round(rx_mbps, 2)) + "\t\t" + str(round(tx_mbps, 2))
+        
+        # Reset for next interval
+        rx_bytes = 0
+        tx_bytes = 0
+        last_time = current_time
+    }
+}

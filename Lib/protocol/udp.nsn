@@ -1,0 +1,33 @@
+# NSN (Network Security Navigator)
+# High-level UDP Protocol Wrapper
+
+import _network
+
+class Client:
+    def __init__(self, host, port):
+        self.host = host
+        self.port = port
+        self.sock = _network.socket(_network.AF_INET, _network.SOCK_DGRAM)
+
+    def send(self, data):
+        if type(data) == str:
+            data = data.encode()
+        return self.sock.sendto(data, (self.host, self.port))
+
+    def recv(self, bufsize=4096):
+        data, addr = self.sock.recvfrom(bufsize)
+        return data
+
+    def close(self):
+        if self.sock:
+            self.sock.close()
+            self.sock = None
+
+def ping(host, port, data=b"ping"):
+    client = Client(host, port)
+    try:
+        client.send(data)
+        # In a real scanner, we might wait for a response or just check if port is open
+        return True
+    finally:
+        client.close()

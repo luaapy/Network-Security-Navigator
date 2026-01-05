@@ -1,0 +1,21 @@
+# NSN (Network Security Navigator)
+# File: test_net.nsn
+
+import protocol
+
+def test_ping():
+    rtt = protocol.ping("127.0.0.1")
+    print("Ping RTT:", rtt)
+
+def test_dns():
+    ip = protocol.resolve("localhost")
+    print("Resolved localhost to", ip)
+
+def test_http():
+    resp = protocol.get("http://example.com")
+    print("HTTP status:", resp.status)
+
+# Run tests
+test_ping()
+test_dns()
+test_http()

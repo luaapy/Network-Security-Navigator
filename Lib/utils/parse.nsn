@@ -1,0 +1,73 @@
+# NSN (Network Security Navigator)
+# Parsing and CLI Utilities
+
+class ArgParser:
+    def __init__(self, description=""):
+        self.description = description
+        self.args = []
+        self.options = {} # name -> {help, default, required}
+
+    def add_argument(self, name, help="", default=None, required=False):
+        self.options[name] = {
+            "help": help,
+            "default": default,
+            "required": required
+        }
+
+    def parse(self, argv):
+        results = {}
+        for name, cfg in self.options.items():
+            results[name] = cfg["default"]
+        
+        i = 1
+        while i < len(argv):
+            arg = argv[i]
+            if arg.startswith("-"):
+                name = arg.lstrip("-")
+                if name in self.options:
+                    if i + 1 < len(argv):
+                        results[name] = argv[i+1]
+                        i += 2
+                    else:
+                        raise ValueError(f"Option {arg} requires a value")
+                else:
+                    i += 1
+            else:
+                self.args.append(arg)
+                i += 1
+        
+        # Check required
+        for name, cfg in self.options.items():
+            if cfg["required"] and results[name] is None:
+                raise ValueError(f"Argument --{name} is required")
+                
+        return results
+
+def parse_url(url):
+    """Very basic URL parser."""
+    schema = "http"
+    if "://" in url:
+        schema, rest = url.split("://", 1)
+    else:
+        rest = url
+    
+    host = rest
+    port = 80
+    path = "/"
+    
+    if "/" in rest:
+        host, path = rest.split("/", 1)
+        path = "/" + path
+    
+    if ":" in host:
+        host, port_str = host.split(":", 1)
+        port = int(port_str)
+    elif schema == "https":
+        port = 443
+        
+    return {
+        "schema": schema,
+        "host": host,
+        "port": port,
+        "path": path
+    }

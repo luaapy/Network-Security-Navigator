@@ -1,0 +1,43 @@
+# NSN (Network Security Navigator)
+# File: 24_traffic_analysis.nsn
+
+# Perform traffic analysis on captured packets to compute basic statistics
+# such as protocol distribution and top talkers.
+
+import network.packet as pcap
+import collections
+import datetime
+
+iface = "eth0"
+duration = 10  # seconds
+
+print "Capturing traffic on " + iface + " for " + str(duration) + " seconds..."
+
+capture = pcap.capture(iface)
+start = datetime.now()
+proto_counts = collections.defaultdict(int)
+src_counts = collections.defaultdict(int)
+
+while (datetime.now() - start).total_seconds() < duration {
+    pkt = capture.next()
+    if pkt != null {
+        proto_counts[pkt.proto] += 1
+        src_counts[pkt.src] += 1
+    }
+}
+
+capture.stop()
+
+print "Traffic analysis results:"
+print "Protocol distribution:"
+for proto, cnt in proto_counts.items() {
+    print " - " + proto + ": " + str(cnt)
+}
+
+print "Top talkers (source IPs):"
+# Sort by count descending and show top 5
+sorted_src = sorted(src_counts.items(), key=lambda x: x[1], reverse=True)
+for i in range(min(5, len(sorted_src))) {
+    ip, cnt = sorted_src[i]
+    print " - " + ip + ": " + str(cnt) + " packets"
+}

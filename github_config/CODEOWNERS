@@ -1,0 +1,19 @@
+# NSN Code Owners
+
+# Global owners
+*       @nsn-dev-lead
+
+# Core Interpreter
+/Nsn/    @nsn-core-team
+/Parser/ @nsn-core-team
+/Include/ @nsn-core-team
+
+# Objects
+/Objects/ @nsn-objects-team
+
+# Networking & Security Modules
+/Modules/_network/  @nsn-net-team
+/Modules/_security/ @nsn-sec-team
+
+# Documentation
+/Doc/ @nsn-docs-team

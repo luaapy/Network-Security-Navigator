@@ -1,0 +1,34 @@
+parameters:
+- name: operatingSystem
+  type: string
+  default: 'ubuntu-latest'
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.10'
+
+- script: |
+    if [ "${{ parameters.operatingSystem }}" == "ubuntu-latest" ]; then
+      sudo apt-get update
+      sudo apt-get install -y libpcap-dev libssl-dev libssh-dev autoconf automake libtool
+    fi
+  displayName: 'Install Dependencies (Linux)'
+  condition: eq('${{ parameters.operatingSystem }}', 'ubuntu-latest')
+
+- script: |
+    ./scripts/build.sh
+  displayName: 'Build NSN'
+  condition: eq('${{ parameters.operatingSystem }}', 'ubuntu-latest')
+
+- task: CopyFiles@2
+  inputs:
+    targetFolder: '$(Build.ArtifactStagingDirectory)'
+    contents: 'nsn'
+  displayName: 'Copy Binary'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'nsn-$(Agent.OS)'
+  displayName: 'Publish Artifacts'

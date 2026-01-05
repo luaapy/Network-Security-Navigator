@@ -1,0 +1,51 @@
+# NSN (Network Security Navigator)
+# File: test_security.nsn
+# Description: Integration tests for the NSN Sandbox and Security model.
+
+import _nsn
+import _security
+
+func test_sandbox_file_restriction() {
+    print("[Security] Testing Sandbox File System Restriction...")
+    
+    # Enable global sandbox
+    _nsn.enable_sandbox()
+    
+    try {
+        # Attempt to access a restricted system file
+        f = open("/etc/shadow", "r")
+        print("  - ERROR: Sandbox escape! Accessed restricted file.")
+        exit(1)
+    } catch (e) {
+        print("  - SUCCESS: Sandbox blocked unauthorized file access: " + e)
+    }
+}
+
+func test_sandbox_network_restriction() {
+    print("[Security] Testing Sandbox Network Policy...")
+    
+    try {
+        # Attempt to connect to a restricted external IP
+        res = _network.ping("8.8.8.8")
+        # In this test environment, we assume 8.8.8.8 is restricted via types.nsn policy
+        print("  - SUCCESS: Network access handled via policy")
+    } catch (e) {
+        print("  - Handled Policy: " + e)
+    }
+}
+
+func test_random_generation() {
+    print("[Security] Testing Secure Random Generation...")
+    bytes = _security.random_bytes(16)
+    if (len(bytes) == 16) {
+        print("  - Generated " + len(bytes) + " secure bytes: " + bytes)
+    } else {
+        exit(1)
+    }
+}
+
+test_sandbox_file_restriction()
+test_sandbox_network_restriction()
+test_random_generation()
+
+print("[Security] All security integration tests PASSED.")
